@@ -201,24 +201,24 @@
 @layer components {
   @layer layout {
     header {
-      @apply sticky top-0 z-50 mb-2 bg-white/10 backdrop-blur-xl backdrop-saturate-150 transition-all duration-300 max-md:px-4 max-md:py-2 dark:bg-gray-900/90;
+      @apply sticky top-0 z-50 mb-2 bg-white/10 backdrop-blur-xl backdrop-saturate-150 transition-all duration-300 dark:bg-gray-900/90;
 
       & .header-content {
         @apply flex h-14 items-center justify-between px-6 py-3 max-md:px-4 max-md:py-2;
       }
 
       & .desktop-menu-container {
-        @apply pointer-events-none fixed left-0 right-0 top-14 z-40 h-0 overflow-hidden border-t border-slate-200/20 bg-white/10 opacity-0 backdrop-blur-xl backdrop-saturate-150 shadow-lg transition-all duration-300 ease-out max-md:hidden dark:border-slate-700/20 dark:bg-gray-900/90;
+        @apply h-0 w-full overflow-hidden transition-all duration-300 ease-out max-md:hidden;
       }
 
       &.has-desktop-nav {
         & .desktop-menu-container {
-          @apply pointer-events-auto h-auto opacity-100;
+          @apply h-auto;
         }
       }
 
       & .desktop-nav {
-        @apply hidden w-full px-6 py-4;
+        @apply hidden w-full px-6 pb-4;
 
         &.active {
           @apply block;

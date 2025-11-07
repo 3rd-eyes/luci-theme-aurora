@@ -15,7 +15,7 @@ const SELECTORS = {
   TABMENU: "#tabmenu",
   TOPMENU: "#topmenu",
   MODEMENU: "#modemenu",
-  DESKTOP_MENU_OVERLAY: ".desktop-menu-overlay",
+  DESKTOP_MENU_CONTAINER: ".desktop-menu-container",
   DESKTOP_NAV: ".desktop-nav",
   HEADER: "header",
 };
@@ -332,10 +332,10 @@ return baseclass.extend({
 
   // Render top-level menu items
   renderTopLevelMenu(children, ul, url, level) {
-    const desktopMenuOverlay = this.getElement(SELECTORS.DESKTOP_MENU_OVERLAY);
+    const desktopMenuContainer = this.getElement(SELECTORS.DESKTOP_MENU_CONTAINER);
     const header = this.getElement(SELECTORS.HEADER);
 
-    if (desktopMenuOverlay) desktopMenuOverlay.innerHTML = "";
+    if (desktopMenuContainer) desktopMenuContainer.innerHTML = "";
 
     children.forEach((child) => {
       const menuId = `menu-${child.name}`;
@@ -343,28 +343,16 @@ return baseclass.extend({
 
       ul.appendChild(li);
 
-      if (hasSubmenu && desktopMenuOverlay) {
+      if (hasSubmenu && desktopMenuContainer) {
         const desktopNav = this.createDesktopNav(menuId, child, url, level);
-        desktopMenuOverlay.appendChild(desktopNav);
+        desktopMenuContainer.appendChild(desktopNav);
         this.setupDesktopNavHover(li, menuId);
       }
     });
 
-    // Setup mouseleave handler with relatedTarget check
-    if (header && desktopMenuOverlay) {
-      header.addEventListener("mouseleave", L.bind(function(e) {
-        // Check if mouse is moving to desktop-menu-overlay
-        if (e.relatedTarget && (e.relatedTarget === desktopMenuOverlay || desktopMenuOverlay.contains(e.relatedTarget))) {
-          return; // Don't hide
-        }
-        this.hideDesktopNav();
-      }, this));
-
-      desktopMenuOverlay.addEventListener("mouseleave", L.bind(function(e) {
-        // Check if mouse is moving back to header
-        if (e.relatedTarget && (e.relatedTarget === header || header.contains(e.relatedTarget))) {
-          return; // Don't hide
-        }
+    // Setup mouseleave handler
+    if (header) {
+      header.addEventListener("mouseleave", L.bind(function() {
         this.hideDesktopNav();
       }, this));
     }
@@ -401,30 +389,31 @@ return baseclass.extend({
 
   // Toggle all desktop navigations active state
   toggleAllDesktopNavs(active) {
-    const desktopMenuOverlay = this.getElement(SELECTORS.DESKTOP_MENU_OVERLAY);
-    if (!desktopMenuOverlay) return;
+    const desktopMenuContainer = this.getElement(SELECTORS.DESKTOP_MENU_CONTAINER);
+    const header = this.getElement(SELECTORS.HEADER);
+    if (!desktopMenuContainer || !header) return;
 
-    const allNavs = this.getElements(SELECTORS.DESKTOP_NAV, desktopMenuOverlay);
+    const allNavs = this.getElements(SELECTORS.DESKTOP_NAV, desktopMenuContainer);
     allNavs.forEach((nav) => {
       nav.classList.toggle(CLASSES.ACTIVE, active);
     });
 
-    desktopMenuOverlay.classList.toggle(CLASSES.ACTIVE, active);
+    header.classList.toggle(CLASSES.HAS_DESKTOP_NAV, active);
   },
 
   showDesktopNav(menuId) {
-    const desktopMenuOverlay = this.getElement(SELECTORS.DESKTOP_MENU_OVERLAY);
+    const desktopMenuContainer = this.getElement(SELECTORS.DESKTOP_MENU_CONTAINER);
     const targetNav = this.getElement(`${SELECTORS.DESKTOP_NAV}[data-menu-for="${menuId}"]`);
 
-    if (!desktopMenuOverlay || !targetNav) return;
+    if (!desktopMenuContainer || !targetNav) return;
 
     // Hide all navigations first
-    const allNavs = this.getElements(SELECTORS.DESKTOP_NAV, desktopMenuOverlay);
+    const allNavs = this.getElements(SELECTORS.DESKTOP_NAV, desktopMenuContainer);
     allNavs.forEach((nav) => nav.classList.remove(CLASSES.ACTIVE));
 
     // Show target navigation
     targetNav.classList.add(CLASSES.ACTIVE);
-    desktopMenuOverlay.classList.add(CLASSES.ACTIVE);
+    this.getElement(SELECTORS.HEADER).classList.add(CLASSES.HAS_DESKTOP_NAV);
   },
 
   hideDesktopNav() {

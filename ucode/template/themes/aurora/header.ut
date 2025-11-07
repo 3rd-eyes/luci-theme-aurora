@@ -93,6 +93,9 @@
 		<div class="desktop-menu-container"></div>
 	</header>
 
+	<!-- Desktop menu backdrop -->
+	<div class="desktop-menu-backdrop"></div>
+
 		<!-- Mobile menu overlay -->
 		<div class="mobile-menu-overlay" id="mobile-menu-overlay">
 			<nav class="mobile-nav">

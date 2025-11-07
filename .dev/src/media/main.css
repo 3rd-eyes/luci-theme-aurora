@@ -208,22 +208,20 @@
       }
 
       & .desktop-menu-container {
-        @apply w-full overflow-hidden opacity-0 transition-all duration-300 ease-out max-md:hidden;
-        max-height: 0;
+        @apply hidden w-full border-t border-slate-200/20 bg-white/5 backdrop-blur-xl backdrop-saturate-150 dark:border-slate-700/20 dark:bg-slate-900/20;
       }
 
       &.has-desktop-nav {
         & .desktop-menu-container {
-          @apply opacity-100;
-          max-height: 300px;
+          @apply block;
         }
       }
 
       & .desktop-nav {
-        @apply w-full px-6 py-0 opacity-0 transition-opacity duration-200 ease-out;
+        @apply hidden w-full px-6 py-4;
 
         &.active {
-          @apply py-4 opacity-100;
+          @apply block;
         }
 
         & .desktop-nav-list {
